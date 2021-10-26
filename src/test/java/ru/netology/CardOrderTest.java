@@ -37,7 +37,7 @@ public class CardOrderTest {
         $("[data-test-id=phone] input").setValue("+79529876543");
         $("[data-test-id=agreement]").click();
         $("button").click();
-        $("[data-test-id=order-success]").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+        $("[data-test-id=name].input_invalid .input__sub").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class CardOrderTest {
         $("[data-test-id=phone] input").setValue("+799529876543");
         $("[data-test-id=agreement]").click();
         $("button").click();
-        $("[data-test-id=order-success]").shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+        $("[data-test-id=phone].input_invalid .input__sub").shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
 
     @Test
@@ -54,7 +54,24 @@ public class CardOrderTest {
         $("[data-test-id=name] input").setValue("Иванов-Коваль Иван");
         $("[data-test-id=phone] input").setValue("+79529876543");
         $("button").click();
-        $("[data-test-id=order-success]").shouldHave(exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных и разрешаю сделать запрос в бюро кредитных историй"));
+        $("[data-test-id=agreement].input_invalid").shouldHave(exactText("Я соглашаюсь с условиями обработки и использования моих персональных данных и разрешаю сделать запрос в бюро кредитных историй"));
     }
 
+    @Test
+    public void shouldShowErrorIfTheNameIsEmpty() {
+        $("[data-test-id=name] input").setValue("");
+        $("[data-test-id=phone] input").setValue("+79529876543");
+        $("[data-test-id=agreement]").click();
+        $("button").click();
+        $("[data-test-id=name].input_invalid .input__sub").shouldHave(exactText("Поле обязательно для заполнения"));
+    }
+
+    @Test
+    public void shouldShowErrorIfThePhoneIsEmpty() {
+        $("[data-test-id=name] input").setValue("Иванов-Коваль Иван");
+        $("[data-test-id=phone] input").setValue("");
+        $("[data-test-id=agreement]").click();
+        $("button").click();
+        $("[data-test-id=phone].input_invalid .input__sub").shouldHave(exactText("Поле обязательно для заполнения"));
+    }
 }
